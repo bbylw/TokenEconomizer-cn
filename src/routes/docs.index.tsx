@@ -1,8 +1,13 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
-import { DocHeader, DocPager } from '../components/DocParts'
+import { DocHeader, DocPager, pageHead } from '../components/DocParts'
 import { docPages } from '../data/content'
 
 export const Route = createFileRoute('/docs/')({
+  head: () =>
+    pageHead(
+      '文档总览',
+      'TokenEconomizer 中文文档总览：涵盖五种编码智能体的安装、15 条日常命令、9 项核心设置与三档预设、架构拆解、真机验证细节与论文实验复现指南。',
+    ),
   component: DocsIndex,
 })
 
@@ -13,7 +18,7 @@ function DocsIndex() {
     <>
       <DocHeader
         title="文档"
-        lead="TokenEconomizer 是 Claude Code、Codex、GitHub Copilot CLI 与 Pi 的插件，并对 opencode 提供实验性支持。下面按主题分成六节，从安装到每项设置的默认值。"
+        lead="TokenEconomizer 是 Claude Code、Codex、GitHub Copilot CLI 与 Pi 的插件，并对 opencode 提供实验性支持。下面按「日常使用」与「深入参考」分成十节，涵盖从安装、调参到架构原理与论文复现的全部细节。"
       />
 
       <div className="prose">
@@ -34,7 +39,7 @@ function DocsIndex() {
       </div>
 
       <div className="callout cool" style={{ marginTop: 20 }}>
-        <b>第一次读。</b> 先按「快速开始」装好并在仓库里跑一次 status；之后基本只需要「日常命令」里的四个命令。想改默认行为时再翻「设置」。
+        <b>第一次读。</b> 先按「快速开始」装好并在仓库里跑一次 <code>status</code>；之后日常基本只需要「日常命令」里的前几条。想了解底层钩子如何保护缓存、或者想在本地复现 SWE-Bench 实验，可进一步阅读「架构与接口设计」和「复现论文实验」。
       </div>
 
       <DocPager current="/docs" />

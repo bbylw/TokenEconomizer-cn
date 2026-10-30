@@ -1,15 +1,70 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { useEffect, useRef } from 'react'
 import { Meter } from '../components/Meter'
 import { InstallTabs } from '../components/InstallTabs'
-import { results } from '../data/content'
+import { faqs, results } from '../data/content'
 
 export const Route = createFileRoute('/')({
   component: Home,
 })
 
+const deepLinks = [
+  {
+    to: '/docs/architecture' as const,
+    tag: 'ARCHITECTURE',
+    title: '架构与接口设计',
+    desc: '四大标准库抽象接口、六个生命周期钩子拆解，以及插件与论文实验设置的 8 项对照。',
+  },
+  {
+    to: '/docs/plugin-internals' as const,
+    tag: 'VERIFIED',
+    title: '插件验证与状态隐私',
+    desc: '五种智能体真机验证记录、60 分钟提示缓存保护窗口、按提示计数消融与脱敏摘要边界。',
+  },
+  {
+    to: '/docs/experiments' as const,
+    tag: 'BENCHMARKS',
+    title: '复现论文实验',
+    desc: 'SWE-Bench（277 任务）与 Web-Bench（102 任务）的五步配置、实验组启动脚本与汇总对比。',
+  },
+  {
+    to: '/docs/troubleshooting' as const,
+    tag: 'DIAGNOSTICS',
+    title: '故障排查与诊断',
+    desc: 'te doctor 环境自检、te probe 七会话闭环探测，以及插件与实验复现常见报错修复。',
+  },
+]
+
 function Home() {
+  const mainRef = useRef<HTMLElement | null>(null)
+
+  useEffect(() => {
+    const root = mainRef.current
+    if (!root || typeof IntersectionObserver === 'undefined') return
+    const items = Array.from(root.querySelectorAll<HTMLElement>('.reveal'))
+    if (items.length === 0) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible')
+            observer.unobserve(entry.target)
+          }
+        }
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -32px 0px' },
+    )
+
+    for (const el of items) {
+      observer.observe(el)
+    }
+
+    return () => observer.disconnect()
+  }, [])
+
   return (
-    <main className="wrap">
+    <main className="wrap" id="main-content" tabIndex={-1} ref={mainRef}>
       <section className="hero">
         <div className="hero-copy">
           <div className="meta-line">
@@ -52,7 +107,7 @@ function Home() {
         </div>
       </section>
 
-      <section className="stats">
+      <section className="stats reveal">
         <div className="stat">
           <span className="n a">18.4–30.9%</span>
           <span className="l">五种「智能体–模型」组合的平均成本降幅</span>
@@ -71,12 +126,12 @@ function Home() {
         </div>
       </section>
 
-      <div className="sec-head" id="mech">
+      <div className="sec-head reveal" id="mech">
         <h2>三种机制，各管一类浪费</h2>
         <p className="sec-note">每种机制都能单独开关；斜体字母是各自的设置，均有默认值。</p>
       </div>
 
-      <section className="mech">
+      <section className="mech reveal">
         <article className="tile">
           <div className="tile-top">
             <h3>
@@ -193,12 +248,12 @@ function Home() {
         </article>
       </section>
 
-      <div className="sec-head" id="principles">
+      <div className="sec-head reveal" id="principles">
         <h2>为什么这些浪费会重复</h2>
         <p className="sec-note">智能体被设计来完成任务，而不是来省钱。</p>
       </div>
 
-      <section className="why">
+      <section className="why reveal">
         <p>
           每一轮都要为智能体的指令、每个被加载的工具，以及到目前为止的对话重新付费。开发者在同一仓库上反复使用同一个智能体，于是大量成本被重复支付：同样的事实被重新发现、同样的未用工具被发送、同样类型的失败循环。
         </p>
@@ -207,7 +262,7 @@ function Home() {
         </p>
       </section>
 
-      <section className="principles">
+      <section className="principles reveal">
         <div className="pr">
           <h4>经由智能体本就在读的东西</h4>
           <p>事实在会话开始时进入上下文，工具通过智能体自身的设置被移除，因此不依赖智能体学会一个新的工具。</p>
@@ -226,12 +281,12 @@ function Home() {
         </div>
       </section>
 
-      <div className="sec-head" id="results">
+      <div className="sec-head reveal" id="results">
         <h2>在 277 个 SWE-Bench 任务上实测</h2>
         <p className="sec-note">六个仓库、五种组合，一开始什么都还没学到；成本包含插件发出的每一次模型调用。</p>
       </div>
 
-      <section className="results">
+      <section className="results reveal">
         <div className="res-table">
           <table>
             <thead>
@@ -265,7 +320,8 @@ function Home() {
               安全审计基准：<b>6–20%</b>
             </span>
             <span>
-              完整数据：<a href="https://tokeneconomizer.github.io" target="_blank" rel="noreferrer">
+              完整数据：
+              <a href="https://tokeneconomizer.github.io" target="_blank" rel="noreferrer">
                 项目主页
               </a>
             </span>
@@ -326,21 +382,52 @@ function Home() {
         </div>
       </section>
 
-      <div className="sec-head" id="install">
+      <div className="sec-head reveal" id="install">
         <h2>快速开始</h2>
         <p className="sec-note">
           需要已登录的智能体之一，以及 PATH 上的 Python 3.10+。插件不需要自己的 API 密钥，也从不处理凭证。
         </p>
       </div>
 
-      <InstallTabs />
+      <div className="reveal">
+        <InstallTabs />
+      </div>
 
-      <section className="next-band">
+      <div className="sec-head reveal" id="faq">
+        <h2>常见问题</h2>
+        <p className="sec-note">关于缓存命中、凭证安全、误剪恢复与多目录共享机制。</p>
+      </div>
+
+      <section className="faq-grid reveal">
+        {faqs.map((item) => (
+          <article key={item.q} className="faq-card">
+            <h3>{item.q}</h3>
+            <p>{item.a}</p>
+          </article>
+        ))}
+      </section>
+
+      <div className="sec-head reveal">
+        <h2>深入技术细节</h2>
+        <p className="sec-note">从标准库接口设计、各智能体真机验证到论文基准实验复现。</p>
+      </div>
+
+      <section className="deep-grid reveal">
+        {deepLinks.map((d) => (
+          <Link key={d.to} to={d.to} className="doc-card">
+            <span>{d.tag}</span>
+            <b>{d.title}</b>
+            <p>{d.desc}</p>
+          </Link>
+        ))}
+      </section>
+
+      <section className="next-band reveal">
         <p>
-          装好就照常工作，插件不需要你做任何事。想知道它学到了什么、改了哪些设置、每个智能体的细节差别，去文档里看。
+          装好就照常工作，插件不需要你做任何事。想知道全部 15 条命令、9 项核心设置与三档循环守卫预设阈值，去文档总览里看。
         </p>
         <Link className="btn btn-line" to="/docs">
-          打开文档
+          打开文档总览
         </Link>
       </section>
     </main>

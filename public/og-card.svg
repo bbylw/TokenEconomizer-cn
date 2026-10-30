@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <pattern id="wasteHatch" width="8" height="8" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+      <rect width="8" height="8" fill="#1b1810" />
+      <line x1="0" y1="0" x2="0" y2="8" stroke="#f2a93b" stroke-width="4" stroke-opacity="0.85" />
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#080b0a" />
+
+  <!-- Outer Frame -->
+  <rect x="36" y="36" width="1128" height="558" fill="#101614" stroke="#26302c" stroke-width="2" />
+  <line x1="640" y1="36" x2="640" y2="474" stroke="#26302c" stroke-width="2" />
+  <line x1="36" y1="474" x2="1164" y2="474" stroke="#26302c" stroke-width="2" />
+
+  <!-- Left Column: Copy -->
+  <rect x="76" y="82" width="8" height="8" fill="#f2a93b" />
+  <text x="96" y="91" fill="#66756f" font-family="'IBM Plex Mono', Consolas, monospace" font-size="15">微软研究院 · 加州大学伯克利分校 · arXiv 2610.22732</text>
+
+  <text x="76" y="156" fill="#e9efeb" font-family="'IBM Plex Mono', Consolas, monospace" font-weight="600" font-size="38" letter-spacing="-1">TokenEconomizer</text>
+  <text x="76" y="214" fill="#e9efeb" font-family="'PingFang SC', 'Microsoft YaHei', sans-serif" font-weight="600" font-size="34">同一个仓库里，</text>
+  <text x="76" y="262" fill="#f2a93b" font-family="'PingFang SC', 'Microsoft YaHei', sans-serif" font-weight="600" font-size="34">不该从头学两遍。</text>
+
+  <text x="76" y="318" fill="#97a49e" font-family="'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="18">面向编码智能体的经验驱动黑盒成本控制。</text>
+  <text x="76" y="348" fill="#97a49e" font-family="'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="18">微技能 · 工具剪枝 · 失败循环干预，不改模型与权重。</text>
+
+  <!-- Agent chips -->
+  <g transform="translate(76, 386)" font-family="'IBM Plex Mono', Consolas, monospace" font-size="14" fill="#c3cec8">
+    <rect x="0" y="0" width="116" height="30" fill="#151c19" stroke="#26302c" />
+    <text x="14" y="20">Claude Code</text>
+    <rect x="126" y="0" width="72" height="30" fill="#151c19" stroke="#26302c" />
+    <text x="141" y="20">Codex</text>
+    <rect x="208" y="0" width="114" height="30" fill="#151c19" stroke="#26302c" />
+    <text x="222" y="20">Copilot CLI</text>
+    <rect x="332" y="0" width="46" height="30" fill="#151c19" stroke="#26302c" />
+    <text x="347" y="20">Pi</text>
+    <rect x="388" y="0" width="96" height="30" fill="#151c19" stroke="#26302c" />
+    <text x="403" y="20">opencode</text>
+  </g>
+
+  <!-- Right Column: 6-session Meter -->
+  <text x="676" y="90" fill="#66756f" font-family="'IBM Plex Mono', Consolas, monospace" font-size="14">同一仓库 · 连续六个会话成本（工作 + 浪费）</text>
+  <line x1="676" y1="106" x2="1128" y2="106" stroke="#1a2220" stroke-width="1" />
+
+  <!-- Session Bars -->
+  <g font-family="'IBM Plex Mono', Consolas, monospace" font-size="14">
+    <!-- S1 -->
+    <text x="676" y="146" fill="#66756f">S1</text>
+    <rect x="714" y="132" width="350" height="18" fill="#1a2220" />
+    <rect x="714" y="132" width="210" height="18" fill="#5d6e67" />
+    <rect x="924" y="132" width="108" height="18" fill="url(#wasteHatch)" />
+    <text x="1086" y="146" fill="#97a49e">100</text>
+
+    <!-- S2 -->
+    <text x="676" y="192" fill="#66756f">S2</text>
+    <rect x="714" y="178" width="350" height="18" fill="#1a2220" />
+    <rect x="714" y="178" width="210" height="18" fill="#5d6e67" />
+    <rect x="924" y="178" width="88" height="18" fill="url(#wasteHatch)" />
+    <text x="1094" y="192" fill="#97a49e">94</text>
+
+    <!-- S3 -->
+    <text x="676" y="238" fill="#66756f">S3</text>
+    <rect x="714" y="224" width="350" height="18" fill="#1a2220" />
+    <rect x="714" y="224" width="210" height="18" fill="#5d6e67" />
+    <rect x="924" y="224" width="68" height="18" fill="url(#wasteHatch)" />
+    <text x="1094" y="238" fill="#97a49e">88</text>
+
+    <!-- S4 -->
+    <text x="676" y="284" fill="#66756f">S4</text>
+    <rect x="714" y="270" width="350" height="18" fill="#1a2220" />
+    <rect x="714" y="270" width="210" height="18" fill="#5d6e67" />
+    <rect x="924" y="270" width="44" height="18" fill="url(#wasteHatch)" />
+    <text x="1094" y="284" fill="#63d2ff">80</text>
+
+    <!-- S5 -->
+    <text x="676" y="330" fill="#66756f">S5</text>
+    <rect x="714" y="316" width="350" height="18" fill="#1a2220" />
+    <rect x="714" y="316" width="210" height="18" fill="#5d6e67" />
+    <rect x="924" y="316" width="25" height="18" fill="url(#wasteHatch)" />
+    <text x="1094" y="330" fill="#63d2ff">74</text>
+
+    <!-- S6 -->
+    <text x="676" y="376" fill="#66756f">S6</text>
+    <rect x="714" y="362" width="350" height="18" fill="#1a2220" />
+    <rect x="714" y="362" width="210" height="18" fill="#5d6e67" />
+    <rect x="924" y="362" width="18" height="18" fill="url(#wasteHatch)" />
+    <text x="1094" y="376" fill="#63d2ff">72</text>
+
+    <!-- Baseline dashed line -->
+    <line x1="1032" y1="122" x2="1032" y2="392" stroke="#66756f" stroke-width="1.5" stroke-dasharray="4 4" />
+  </g>
+
+  <text x="676" y="432" fill="#63d2ff" font-family="'IBM Plex Mono', Consolas, monospace" font-size="14">S1 记入微技能 · S2 工具剪枝生效 · S3 循环守卫重定向</text>
+
+  <!-- Bottom Stats Bar -->
+  <g font-family="'IBM Plex Mono', Consolas, monospace">
+    <text x="76" y="528" fill="#f2a93b" font-size="30" font-weight="600">18.4–30.9%</text>
+    <text x="76" y="558" fill="#66756f" font-size="14">五种组合平均成本降幅</text>
+
+    <line x1="340" y1="474" x2="340" y2="594" stroke="#26302c" stroke-width="2" />
+    <text x="376" y="528" fill="#e9efeb" font-size="30" font-weight="600">30 / 30</text>
+    <text x="376" y="558" fill="#66756f" font-size="14">仓库 × 组合单元全部更便宜</text>
+
+    <line x1="640" y1="474" x2="640" y2="594" stroke="#26302c" stroke-width="2" />
+    <text x="676" y="528" fill="#63d2ff" font-size="30" font-weight="600">4 / 5</text>
+    <text x="676" y="558" fill="#66756f" font-size="14">Pass@1 提升的组合数</text>
+
+    <line x1="910" y1="474" x2="910" y2="594" stroke="#26302c" stroke-width="2" />
+    <text x="946" y="528" fill="#e9efeb" font-size="30" font-weight="600">277</text>
+    <text x="946" y="558" fill="#66756f" font-size="14">SWE-Bench 实测任务</text>
+  </g>
+</svg>
+

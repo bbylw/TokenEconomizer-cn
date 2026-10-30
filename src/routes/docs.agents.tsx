@@ -1,10 +1,21 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { DocHeader, DocPager } from '../components/DocParts'
+import { Link, createFileRoute } from '@tanstack/react-router'
+import { DocHeader, DocPager, pageHead } from '../components/DocParts'
 import { REPO, pruneTargets, stuck } from '../data/content'
 
 export const Route = createFileRoute('/docs/agents')({
+  head: () =>
+    pageHead(
+      '各智能体上的行为',
+      'TokenEconomizer 在 Claude Code、Codex、GitHub Copilot CLI、Pi 与 opencode 上的工具剪枝目标、配置文件位置、卡住时的提示与停止方式，以及插件自身模型调用的计费方式。',
+    ),
   component: AgentsPage,
 })
+
+const toc = [
+  { id: 'prune', label: '工具剪枝排除什么' },
+  { id: 'stuck', label: '当某一轮卡住时' },
+  { id: 'model-calls', label: '模型调用与 API 密钥' },
+]
 
 function AgentsPage() {
   return (
@@ -12,6 +23,7 @@ function AgentsPage() {
       <DocHeader
         title="各智能体上的行为"
         lead="微技能和循环守卫在每个智能体上的工作方式相同。每个智能体各自学习：事实、工具证据，以及循环守卫对「通常一轮」的感知，都按智能体和仓库分别保存，而设置是共享的。"
+        toc={toc}
       />
 
       <div className="prose">
@@ -22,7 +34,7 @@ function AgentsPage() {
         <table>
           <thead>
             <tr>
-              <th>智能体</th>
+              <th style={{ width: 130 }}>智能体</th>
               <th>排除的对象</th>
               <th>写入位置</th>
             </tr>
@@ -30,7 +42,9 @@ function AgentsPage() {
           <tbody>
             {pruneTargets.map((p) => (
               <tr key={p.agent}>
-                <td>{p.agent}</td>
+                <td>
+                  <strong>{p.agent}</strong>
+                </td>
                 <td>{p.target}</td>
                 <td>
                   <code>{p.where}</code>
@@ -55,14 +69,14 @@ function AgentsPage() {
 
         <h2 id="stuck">当某一轮卡住时</h2>
         <p>
-          循环守卫首先学习这个仓库里的一轮通常要跑多久：它会等到此处有 e 轮「正常结束」——即自行结束，且最后一次编辑后没有失败的检查。此后，出现循环迹象（同样的失败反复出现，或错误不断堆积）的一轮会被送交裁判。有一种情况无需裁判即可重定向：某一轮在反复空转同样的编辑、撞上同样的失败时，运行长度超过了通常长度的
-          b 倍。
+          循环守卫首先学习这个仓库里的一轮通常要跑多久：它会等到此处有 <code>e</code> 轮「正常结束」——即自行结束，且最后一次编辑后没有失败的检查。此后，出现循环迹象（同样的失败反复出现，或错误不断堆积）的一轮会被送交裁判。有一种情况无需裁判即可重定向：某一轮在反复空转同样的编辑、撞上同样的失败时，运行长度超过了通常长度的{' '}
+          <code>b</code> 倍。
         </p>
         <p>如果一轮在重定向之后仍然卡住，你会看到一行以「如何停下它」结尾的提示：</p>
         <blockquote>
           TokenEconomizer：这一轮在重定向之后看起来仍然卡住（judge-stuck@0.82，46 次工具调用）。按 Esc 中断它。
         </blockquote>
-        <p>这行出现在哪里、以及如何停下这一轮，在终端 UI 与无头运行中分别如下。</p>
+        <p>这行出现在哪里、以及如何停下这一轮，在终端 UI 与无头运行中分别如下：</p>
 
         <table>
           <thead>
@@ -77,11 +91,17 @@ function AgentsPage() {
           <tbody>
             {stuck.map((s) => (
               <tr key={s.agent}>
-                <td>{s.agent}</td>
+                <td>
+                  <strong>{s.agent}</strong>
+                </td>
                 <td>{s.ui}</td>
-                <td>{s.uiStop}</td>
+                <td>
+                  <code>{s.uiStop}</code>
+                </td>
                 <td>{s.headless}</td>
-                <td>{s.headlessStop}</td>
+                <td>
+                  <code>{s.headlessStop}</code>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -113,11 +133,30 @@ function AgentsPage() {
           <code>te status</code> 会统计重定向与「仍然卡住」的提示。
         </p>
 
+        <h2 id="model-calls">模型调用与 API 密钥</h2>
         <p>
-          <a href={`${REPO}/blob/main/docs/PLUGIN.md`}>docs/PLUGIN.md</a>{' '}
-          记录了每个智能体的钩子与设置是如何被验证行为的，
-          <a href={`${REPO}/blob/main/docs/ARCHITECTURE.md`}>docs/ARCHITECTURE.md</a>{' '}
-          则记录了整个包是如何组合在一起的。
+          在默认配置下，插件唯一的模型调用来自循环守卫：当某一轮出现循环迹象时询问裁判模型，以及在裁判认定卡住时生成简短的重定向。工具剪枝从不调用模型。开启微技能（
+          <code>microskills=on</code>）后，会额外增加每隔 <code>microskills_propose_every</code> 个会话运行一次的事实提议器（设为{' '}
+          <code>microskills=envfacts</code> 则完全不调模型）。
+        </p>
+        <p>
+          这些侧调用全部经由<strong>你自己的智能体 CLI</strong> 执行：<code>claude -p</code>、
+          <code>codex exec</code>、移除所有工具后的 <code>copilot -p</code>、仅加载模型的{' '}
+          <code>pi -p</code>，以及禁用写权限的 <code>opencode run</code>。因此它们直接复用你当前会话的订阅套餐或 API 密钥，并计入{' '}
+          <code>status</code> 命令展示的账单中。
+        </p>
+
+        <p>
+          想了解每个智能体钩子验证的底层技术细节，请阅读{' '}
+          <Link to="/docs/plugin-internals">插件验证与状态隐私</Link>，或直接查阅上游仓库的{' '}
+          <a href={`${REPO}/blob/main/docs/PLUGIN.md`} target="_blank" rel="noreferrer">
+            docs/PLUGIN.md
+          </a>{' '}
+          与{' '}
+          <a href={`${REPO}/blob/main/docs/ARCHITECTURE.md`} target="_blank" rel="noreferrer">
+            docs/ARCHITECTURE.md
+          </a>
+          。
         </p>
       </div>
 

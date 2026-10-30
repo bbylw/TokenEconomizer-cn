@@ -1,10 +1,21 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { DocHeader, DocPager } from '../components/DocParts'
+import { DocHeader, DocPager, pageHead } from '../components/DocParts'
 import { REPO, commandPrefixes, commands } from '../data/content'
 
 export const Route = createFileRoute('/docs/commands')({
+  head: () =>
+    pageHead(
+      '日常命令',
+      'TokenEconomizer 全部 15 条命令详解：status、microskills、toolprune、config、repomap、repos 与 doctor，以及在五种智能体与终端中的调用方式。',
+    ),
   component: Commands,
 })
+
+const toc = [
+  { id: 'how', label: '怎么输入' },
+  { id: 'list', label: '全部 15 条命令' },
+  { id: 'permissions', label: '权限确认与旧版别名' },
+]
 
 function Commands() {
   return (
@@ -12,6 +23,7 @@ function Commands() {
       <DocHeader
         title="日常命令"
         lead="照常工作即可；插件不需要你做任何事。要查看或更改它的行为，使用它的命令。这些命令在每个智能体上名字都相同，只有输入方式不同。"
+        toc={toc}
       />
 
       <div className="prose">
@@ -20,27 +32,41 @@ function Commands() {
           <thead>
             <tr>
               <th>智能体</th>
-              <th>这样输入命令</th>
+              <th>在智能体内部输入</th>
+              <th>在仓库终端里运行（零模型调用开销）</th>
             </tr>
           </thead>
           <tbody>
             {commandPrefixes.map((c) => (
               <tr key={c.where}>
-                <td>{c.where}</td>
                 <td>
-                  <code>{c.how}</code>
+                  <strong>{c.where}</strong>
+                </td>
+                <td>
+                  <code>{c.inside}</code>
+                </td>
+                <td>
+                  <code>{c.terminal}</code>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
 
-        <h2 id="list">命令</h2>
+        <div className="callout">
+          <b>智能体内运行 vs 终端运行。</b> 在智能体内部输入斜杠或技能命令（除 Pi 外）会消耗一次模型轮次；而在仓库目录下的普通终端里运行{' '}
+          <code>~/.tokeneconomizer/bin/te</code> 完全免费，适合随时查账或修改配置。如果不带{' '}
+          <code>--host</code> 参数，<code>te</code> 默认操作最近一次在该仓库中工作过的那个智能体。启动器{' '}
+          <code>~/.tokeneconomizer/bin/te</code> 会在第一次会话启动时自动写入；在此之前也可直接运行克隆目录里的{' '}
+          <code>plugin/scripts/te</code>。
+        </div>
+
+        <h2 id="list">全部 15 条命令</h2>
         <table>
           <thead>
             <tr>
-              <th>命令</th>
-              <th>作用</th>
+              <th style={{ width: '34%' }}>命令</th>
+              <th>作用说明</th>
             </tr>
           </thead>
           <tbody>
@@ -56,31 +82,30 @@ function Commands() {
         </table>
 
         <p>
-          在智能体内部，一条命令消耗一次模型轮次；从终端运行则是免费的。其他命令（<code>repos</code>、
-          <code>doctor</code>、<code>config unset</code>{' '}
-          等）以及每个智能体的权限提示，列在{' '}
-          <a href={`${REPO}/blob/main/plugin/README.md#commands`}>plugin/README.md 的 Commands 一节</a>。
+          注：<code>doctor</code> 与 <code>repomap</code> 仅从终端运行（或在 Pi 中以{' '}
+          <code>/te doctor</code>、<code>/te repomap</code> 运行），没有对应的斜杠命令或 Codex 技能。
         </p>
 
-        <div className="callout">
-          <b>用哪个入口跑命令。</b> 在智能体会话里跑，命令能直接看到插件注入的事实和被剪掉的工具；在仓库终端里跑{' '}
-          <code>~/.tokeneconomizer/bin/te</code>，不消耗任何模型调用，适合随时查账。
-        </div>
-
-        <h2 id="patterns">几条常用写法</h2>
-        <p>以 Claude Code 的输入方式为例，其他智能体把前缀换掉即可（见上表）。</p>
+        <h2 id="permissions">权限确认与旧版别名</h2>
         <ul>
           <li>
-            <code>/tokeneconomizer:status</code>：它在这里学到了什么、做了什么，以及你的会话花了多少。
+            <strong>Codex 沙盒确认</strong>：会改动状态的命令（如 <code>config set</code>、
+            <code>config unset</code>、<code>toolprune apply</code>、<code>toolprune restore</code>、
+            <code>repos migrate</code>、<code>repos merge</code>）需要写入沙盒外的{' '}
+            <code>~/.tokeneconomizer</code>，因此 Codex 会弹窗询问权限，请选择 <strong>Yes, proceed</strong>。
           </li>
           <li>
-            <code>/tokeneconomizer:microskills</code>：已注入的事实，以及仍在形成、尚在观察中的那些。
+            <strong>Copilot CLI 确认</strong>：斜杠命令仅在交互模式下可用，且每次执行插件脚本前会询问确认，请选择{' '}
+            <strong>Yes</strong>。
           </li>
           <li>
-            <code>/tokeneconomizer:toolprune</code>：被排除的工具与证据；Pi 与 opencode 上不可用。
-          </li>
-          <li>
-            <code>/tokeneconomizer:toolprune restore</code>：把工具还回来，它们不会再被移除。
+            <strong>旧版命令别名兼容</strong>：在三大机制更名前，微技能与工具剪枝的命令曾叫作{' '}
+            <code>facts</code> 与 <code>untool</code>。目前 <code>te facts</code>、<code>te untool</code> 以及{' '}
+            <code>/tokeneconomizer:facts</code>、<code>/tokeneconomizer:untool</code> 依然完全兼容可用。详见{' '}
+            <a href={`${REPO}/blob/main/plugin/README.md#commands`} target="_blank" rel="noreferrer">
+              plugin/README.md 的 Commands 一节
+            </a>
+            。
           </li>
         </ul>
       </div>

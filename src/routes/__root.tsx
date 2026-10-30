@@ -22,7 +22,12 @@ export const Route = createRootRoute({
       { property: 'og:title', content: title },
       { property: 'og:description', content: description },
       { property: 'og:type', content: 'website' },
+      { property: 'og:locale', content: 'zh_CN' },
+      { property: 'og:image', content: '/og-card.svg' },
       { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:title', content: title },
+      { name: 'twitter:description', content: description },
+      { name: 'twitter:image', content: '/og-card.svg' },
     ],
     links: [{ rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' }],
   }),
@@ -45,6 +50,9 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
         <HeadContent />
       </head>
       <body>
+        <a className="skip-link" href="#main-content">
+          跳到主要内容
+        </a>
         <SiteHeader />
         {children}
         <div className="wrap">
@@ -62,15 +70,20 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
 
 function NotFound() {
   return (
-    <main className="wrap" style={{ paddingTop: 8 }}>
+    <main className="wrap" id="main-content" tabIndex={-1} style={{ paddingTop: 8 }}>
       <div className="frame" style={{ padding: '56px 40px' }}>
-        <h1 className="doc-title">404</h1>
+        <h1 className="doc-title">404 · 页面不存在</h1>
         <p className="doc-lead" style={{ borderBottom: 0, marginBottom: 24 }}>
-          这个地址没有对应的页面。文档从总览页开始。
+          这个地址没有对应的页面。你可以返回首页，或从文档总览开始浏览。
         </p>
-        <Link className="btn btn-solid" to="/docs">
-          回到文档
-        </Link>
+        <div className="cta-row" style={{ marginBottom: 0 }}>
+          <Link className="btn btn-solid" to="/docs">
+            打开文档总览
+          </Link>
+          <Link className="btn btn-line" to="/">
+            返回首页
+          </Link>
+        </div>
       </div>
     </main>
   )

@@ -8,14 +8,14 @@ export const Route = createFileRoute('/docs')({
 const groups = [
   { label: '总览', key: '' },
   { label: '使用', key: '使用' },
-  { label: '参考', key: '参考' },
+  { label: '深入与参考', key: '深入与参考' },
 ]
 
 function DocsLayout() {
   return (
-    <main className="wrap">
+    <main className="wrap" id="main-content" tabIndex={-1}>
       <div className="doc-shell">
-        <aside className="doc-side">
+        <aside className="doc-side" aria-label="文档章节导航">
           {groups.map((g) => (
             <div key={g.label} className="doc-group">
               <h6>{g.label}</h6>
@@ -35,9 +35,9 @@ function DocsLayout() {
             </div>
           ))}
         </aside>
-        <div className="doc-main">
+        <article className="doc-main">
           <Outlet />
-        </div>
+        </article>
       </div>
     </main>
   )

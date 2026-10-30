@@ -13,11 +13,15 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as DocsRouteImport } from './routes/docs'
 import { Route as DocsIndexRouteImport } from './routes/docs.index'
 import { Route as DocsAgentsRouteImport } from './routes/docs.agents'
+import { Route as DocsArchitectureRouteImport } from './routes/docs.architecture'
 import { Route as DocsCitationRouteImport } from './routes/docs.citation'
 import { Route as DocsCommandsRouteImport } from './routes/docs.commands'
+import { Route as DocsExperimentsRouteImport } from './routes/docs.experiments'
+import { Route as DocsPluginInternalsRouteImport } from './routes/docs.plugin-internals'
 import { Route as DocsQuickstartRouteImport } from './routes/docs.quickstart'
 import { Route as DocsRepoRouteImport } from './routes/docs.repo'
 import { Route as DocsSettingsRouteImport } from './routes/docs.settings'
+import { Route as DocsTroubleshootingRouteImport } from './routes/docs.troubleshooting'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -39,6 +43,11 @@ const DocsAgentsRoute = DocsAgentsRouteImport.update({
   path: '/agents',
   getParentRoute: () => DocsRoute,
 } as any)
+const DocsArchitectureRoute = DocsArchitectureRouteImport.update({
+  id: '/architecture',
+  path: '/architecture',
+  getParentRoute: () => DocsRoute,
+} as any)
 const DocsCitationRoute = DocsCitationRouteImport.update({
   id: '/citation',
   path: '/citation',
@@ -47,6 +56,16 @@ const DocsCitationRoute = DocsCitationRouteImport.update({
 const DocsCommandsRoute = DocsCommandsRouteImport.update({
   id: '/commands',
   path: '/commands',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsExperimentsRoute = DocsExperimentsRouteImport.update({
+  id: '/experiments',
+  path: '/experiments',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsPluginInternalsRoute = DocsPluginInternalsRouteImport.update({
+  id: '/plugin-internals',
+  path: '/plugin-internals',
   getParentRoute: () => DocsRoute,
 } as any)
 const DocsQuickstartRoute = DocsQuickstartRouteImport.update({
@@ -64,26 +83,39 @@ const DocsSettingsRoute = DocsSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => DocsRoute,
 } as any)
+const DocsTroubleshootingRoute = DocsTroubleshootingRouteImport.update({
+  id: '/troubleshooting',
+  path: '/troubleshooting',
+  getParentRoute: () => DocsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/docs': typeof DocsRouteWithChildren
   '/docs/agents': typeof DocsAgentsRoute
+  '/docs/architecture': typeof DocsArchitectureRoute
   '/docs/citation': typeof DocsCitationRoute
   '/docs/commands': typeof DocsCommandsRoute
+  '/docs/experiments': typeof DocsExperimentsRoute
+  '/docs/plugin-internals': typeof DocsPluginInternalsRoute
   '/docs/quickstart': typeof DocsQuickstartRoute
   '/docs/repo': typeof DocsRepoRoute
   '/docs/settings': typeof DocsSettingsRoute
+  '/docs/troubleshooting': typeof DocsTroubleshootingRoute
   '/docs/': typeof DocsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/docs/agents': typeof DocsAgentsRoute
+  '/docs/architecture': typeof DocsArchitectureRoute
   '/docs/citation': typeof DocsCitationRoute
   '/docs/commands': typeof DocsCommandsRoute
+  '/docs/experiments': typeof DocsExperimentsRoute
+  '/docs/plugin-internals': typeof DocsPluginInternalsRoute
   '/docs/quickstart': typeof DocsQuickstartRoute
   '/docs/repo': typeof DocsRepoRoute
   '/docs/settings': typeof DocsSettingsRoute
+  '/docs/troubleshooting': typeof DocsTroubleshootingRoute
   '/docs': typeof DocsIndexRoute
 }
 export interface FileRoutesById {
@@ -91,11 +123,15 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/docs': typeof DocsRouteWithChildren
   '/docs/agents': typeof DocsAgentsRoute
+  '/docs/architecture': typeof DocsArchitectureRoute
   '/docs/citation': typeof DocsCitationRoute
   '/docs/commands': typeof DocsCommandsRoute
+  '/docs/experiments': typeof DocsExperimentsRoute
+  '/docs/plugin-internals': typeof DocsPluginInternalsRoute
   '/docs/quickstart': typeof DocsQuickstartRoute
   '/docs/repo': typeof DocsRepoRoute
   '/docs/settings': typeof DocsSettingsRoute
+  '/docs/troubleshooting': typeof DocsTroubleshootingRoute
   '/docs/': typeof DocsIndexRoute
 }
 export interface FileRouteTypes {
@@ -104,32 +140,44 @@ export interface FileRouteTypes {
     | '/'
     | '/docs'
     | '/docs/agents'
+    | '/docs/architecture'
     | '/docs/citation'
     | '/docs/commands'
+    | '/docs/experiments'
+    | '/docs/plugin-internals'
     | '/docs/quickstart'
     | '/docs/repo'
     | '/docs/settings'
+    | '/docs/troubleshooting'
     | '/docs/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/docs/agents'
+    | '/docs/architecture'
     | '/docs/citation'
     | '/docs/commands'
+    | '/docs/experiments'
+    | '/docs/plugin-internals'
     | '/docs/quickstart'
     | '/docs/repo'
     | '/docs/settings'
+    | '/docs/troubleshooting'
     | '/docs'
   id:
     | '__root__'
     | '/'
     | '/docs'
     | '/docs/agents'
+    | '/docs/architecture'
     | '/docs/citation'
     | '/docs/commands'
+    | '/docs/experiments'
+    | '/docs/plugin-internals'
     | '/docs/quickstart'
     | '/docs/repo'
     | '/docs/settings'
+    | '/docs/troubleshooting'
     | '/docs/'
   fileRoutesById: FileRoutesById
 }
@@ -168,6 +216,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocsAgentsRouteImport
       parentRoute: typeof DocsRoute
     }
+    '/docs/architecture': {
+      id: '/docs/architecture'
+      path: '/architecture'
+      fullPath: '/docs/architecture'
+      preLoaderRoute: typeof DocsArchitectureRouteImport
+      parentRoute: typeof DocsRoute
+    }
     '/docs/citation': {
       id: '/docs/citation'
       path: '/citation'
@@ -180,6 +235,20 @@ declare module '@tanstack/react-router' {
       path: '/commands'
       fullPath: '/docs/commands'
       preLoaderRoute: typeof DocsCommandsRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/experiments': {
+      id: '/docs/experiments'
+      path: '/experiments'
+      fullPath: '/docs/experiments'
+      preLoaderRoute: typeof DocsExperimentsRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/plugin-internals': {
+      id: '/docs/plugin-internals'
+      path: '/plugin-internals'
+      fullPath: '/docs/plugin-internals'
+      preLoaderRoute: typeof DocsPluginInternalsRouteImport
       parentRoute: typeof DocsRoute
     }
     '/docs/quickstart': {
@@ -203,26 +272,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocsSettingsRouteImport
       parentRoute: typeof DocsRoute
     }
+    '/docs/troubleshooting': {
+      id: '/docs/troubleshooting'
+      path: '/troubleshooting'
+      fullPath: '/docs/troubleshooting'
+      preLoaderRoute: typeof DocsTroubleshootingRouteImport
+      parentRoute: typeof DocsRoute
+    }
   }
 }
 
 interface DocsRouteChildren {
   DocsAgentsRoute: typeof DocsAgentsRoute
+  DocsArchitectureRoute: typeof DocsArchitectureRoute
   DocsCitationRoute: typeof DocsCitationRoute
   DocsCommandsRoute: typeof DocsCommandsRoute
+  DocsExperimentsRoute: typeof DocsExperimentsRoute
+  DocsPluginInternalsRoute: typeof DocsPluginInternalsRoute
   DocsQuickstartRoute: typeof DocsQuickstartRoute
   DocsRepoRoute: typeof DocsRepoRoute
   DocsSettingsRoute: typeof DocsSettingsRoute
+  DocsTroubleshootingRoute: typeof DocsTroubleshootingRoute
   DocsIndexRoute: typeof DocsIndexRoute
 }
 
 const DocsRouteChildren: DocsRouteChildren = {
   DocsAgentsRoute: DocsAgentsRoute,
+  DocsArchitectureRoute: DocsArchitectureRoute,
   DocsCitationRoute: DocsCitationRoute,
   DocsCommandsRoute: DocsCommandsRoute,
+  DocsExperimentsRoute: DocsExperimentsRoute,
+  DocsPluginInternalsRoute: DocsPluginInternalsRoute,
   DocsQuickstartRoute: DocsQuickstartRoute,
   DocsRepoRoute: DocsRepoRoute,
   DocsSettingsRoute: DocsSettingsRoute,
+  DocsTroubleshootingRoute: DocsTroubleshootingRoute,
   DocsIndexRoute: DocsIndexRoute,
 }
 
