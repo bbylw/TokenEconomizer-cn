@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.output/
+.tanstack/
+.vinxi/
+design/
+*.local
+.env
+.DS_Store
+.workbuddy/
